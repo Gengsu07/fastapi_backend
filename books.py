@@ -1,0 +1,92 @@
+from fastapi import FastAPI, Body
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class books_data(BaseModel):
+    title: str
+    author: str
+    category: str
+
+
+books = [
+    {"title": "To Kill a Mockingbird", "author": "Harper Lee", "category": "Fiction"},
+    {"title": "1984", "author": "George Orwell", "category": "Dystopian"},
+    {"title": "Pride and Prejudice", "author": "Jane Austen", "category": "Classic"},
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "category": "Fiction",
+    },
+    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "category": "Fantasy"},
+    {
+        "title": "The Catcher in the Rye",
+        "author": "J.D. Salinger",
+        "category": "Coming of Age",
+    },
+    {
+        "title": "Harry Potter and the Sorcerer's Stone",
+        "author": "J.K. Rowling",
+        "category": "Fantasy",
+    },
+    {"title": "The Da Vinci Code", "author": "Dan Brown", "category": "Mystery"},
+    {"title": "The Alchemist", "author": "Paulo Coelho", "category": "Adventure"},
+    {"title": "The Alchemist1", "author": "Paulo Coelho", "category": "Adventure"},
+    {"title": "The Hunger Games", "author": "Suzanne Collins", "category": "Dystopian"},
+    {"title": "Title1", "author": "Harper Lee", "category": "Fiction"},
+    {"title": "Title1", "author": "Harper ", "category": "Fiction"},
+]
+
+
+@app.get("/")
+async def home():
+    return {"Hello": "Gengsu"}
+
+
+@app.get("/books")
+async def allbooks():
+    return books
+
+
+@app.get("/users/{username}")
+async def username(username: str):
+    return {"username": username}
+
+
+@app.get("/books/title/{book_title}")
+async def book(book_title: str):
+    book = [x for x in books if x.get("title").casefold() == book_title.casefold()]
+    if len(book) > 0:
+        return book
+    else:
+        return {"message": "Books Title is not found"}
+
+
+@app.get("/books/author/{book_author}")
+async def author(book_author: str, category: str):
+    book = [
+        x
+        for x in books
+        if (x.get("author").casefold() == book_author.casefold())
+        and (x.get("category").casefold() == category.casefold())
+    ]
+    if len(book) > 0:
+        return book
+    else:
+        return {"message": "Books Author and Cateogry bis not found"}
+
+
+@app.post("/books/add_book")
+async def add_book(new_book: books_data):
+    books.append(new_book)
+    return {"status": "add books succeess"}
+
+
+@app.put("/books/update_books")
+async def update_book(update_books: books_data):
+    updated_book = update_books.dict()
+    for book in books:
+        if book["title"].casefold() == updated_book.get("title").casefold():
+            book.update(updated_book)
+    return {"change data": "success"}
