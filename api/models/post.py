@@ -20,7 +20,7 @@ class UserComment(UserCommentIn):
 
 class UserPostWithComment(BaseModel):
     post: UserPost
-    comment: list[UserComment]
+    comments: list[UserComment]
 
 
 # {
