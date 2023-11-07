@@ -1,9 +1,3 @@
-from fastapi import FastAPI, Body
-from pydantic import BaseModel
-
-app = FastAPI()
-
-
 class books_data(BaseModel):
     title: str
     author: str
@@ -37,12 +31,6 @@ books = [
     {"title": "Title1", "author": "Harper Lee", "category": "Fiction"},
     {"title": "Title1", "author": "Harper ", "category": "Fiction"},
 ]
-
-
-@app.get("/")
-async def home():
-    return {"Hello": "Gengsu"}
-
 
 @app.get("/books")
 async def allbooks():

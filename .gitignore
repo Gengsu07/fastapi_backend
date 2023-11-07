@@ -1,2 +1,8 @@
 __pycache__
 fastapi
+.vscode
+.env
+.json
+
+*venv*
+.venv/*
