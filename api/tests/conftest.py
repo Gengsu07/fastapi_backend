@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
+from api.database import database  # noqa:E402
 from api.main import app
-from api.routers.post import comment_data, post_data
 
 
 @pytest.fixture(scope="session")
@@ -19,10 +19,10 @@ def client() -> Generator:
 
 
 @pytest.fixture(autouse=True)
-def db() -> AsyncGenerator:
-    post_data.clear()
-    comment_data.clear()
+async def db() -> AsyncGenerator:
+    await database.connect()
     yield
+    await database.disconnect()
 
 
 @pytest.fixture()
